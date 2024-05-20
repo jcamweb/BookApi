@@ -13,6 +13,54 @@ namespace BookApi.Repository
             _logger = logger;   
             _context = context;
         }
+
+        public async Task<IEnumerable<Book>> GetAllAsync()
+        {
+            return await _context.Books.ToListAsync();
+        }
+
+        public async Task<Book> GetByIdAsync(int id)
+        {
+            try
+            {
+                return await _context.Books.FindAsync(id);
+            }
+
+
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(GetByIdAsync)} no ha podido recuperar book: {ex.Message}");
+                throw new Exception($"{nameof(GetByIdAsync)} no ha podido recuperar book: {ex.Message}");
+
+            }
+        }
+
+        public async Task AddAsync(Book book)
+        {
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Book book)
+        {
+            _context.Entry(book).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var book = await _context.Books.FindAsync(id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Books.AnyAsync(e => e.Id == id);
+        }
         public async Task<IEnumerable<Book>> SearchBookAsync(string searchString)
         {
             if (_context.Books == null)
