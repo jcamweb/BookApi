@@ -26,13 +26,13 @@ namespace BookApi.Repository
                 return await _context.Books.FindAsync(id);
             }
 
-
             catch (Exception ex)
             {
                 _logger.LogError($"{nameof(GetByIdAsync)} no ha podido recuperar book: {ex.Message}");
                 throw new Exception($"{nameof(GetByIdAsync)} no ha podido recuperar book: {ex.Message}");
 
             }
+
         }
 
         public async Task AddAsync(Book book)
@@ -49,12 +49,23 @@ namespace BookApi.Repository
 
         public async Task DeleteAsync(int id)
         {
+            try 
+            { 
             var book = await _context.Books.FindAsync(id);
-            if (book != null)
-            {
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                if (book != null)
+                {
+                    _context.Books.Remove(book);
+                    await _context.SaveChangesAsync();
+                }
             }
+
+            catch (Exception ex)
+            {
+                _logger.LogError($"{nameof(DeleteAsync)} no ha podido recuperar book: {ex.Message}");
+                throw new Exception($"{nameof(DeleteAsync)} no ha podido recuperar book: {ex.Message}");
+
+            }
+
         }
 
         public async Task<bool> ExistsAsync(int id)
