@@ -1,6 +1,7 @@
 ﻿using BookApi.Data;
 using BookApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace BookApi.Repository
 {
@@ -74,20 +75,24 @@ namespace BookApi.Repository
         }
         public async Task<IEnumerable<Book>> SearchBookAsync(string searchString)
         {
+            
             if (_context.Books == null)
             {
                 throw new ArgumentNullException($"{nameof(SearchBookAsync)} Books null");
             }
-
+                      
             var books = from f in _context.Books
                          select f;
-
+            searchString = searchString.ToUpper();
+            Task tasksearch = new Task(() => books = books.Where(s => (s.Title.ToUpper()!.Contains(searchString)) || (s.Author.ToUpper()!.Contains(searchString)) || (s.Genre.ToUpper()!.Contains(searchString))));
             if (!String.IsNullOrEmpty(searchString))
             {
-                books = books.Where(s => (s.Title!.Contains(searchString)) || (s.Author!.Contains(searchString)) || (s.Genre!.Contains(searchString)));
+                tasksearch.Start();
+                             
             }
-
-            return await books.ToListAsync();
+         
+             tasksearch.Wait();
+             return await books.ToListAsync();                
 
         }
     }
