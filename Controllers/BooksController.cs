@@ -44,7 +44,7 @@ namespace BookApi.Controllers
                 return NotFound();
             }
 
-            return book;
+            return Ok(book);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace BookApi.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace BookApi.Controllers
             }
 
             await _repository.DeleteAsync(id);
-            return NoContent();
+            return Ok();
         }
 
         /// <summary>

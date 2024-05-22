@@ -1,4 +1,5 @@
 ﻿using BookApi.Data;
+using BookApi.Extensions;
 using BookApi.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
@@ -83,8 +84,18 @@ namespace BookApi.Repository
                       
             var books = from f in _context.Books
                          select f;
-            searchString = searchString.ToUpper();
-            Task tasksearch = new Task(() => books = books.Where(s => (s.Title.ToUpper()!.Contains(searchString)) || (s.Author.ToUpper()!.Contains(searchString)) || (s.Genre.ToUpper()!.Contains(searchString))));
+          
+            foreach (var book in books)
+            {
+                book.Author = book.Author.NormalizeString();
+                book.Title = book.Title.NormalizeString();
+                book.Genre = book.Genre.NormalizeString();
+                book.PublishedYear = book.PublishedYear.NormalizeString();
+                
+
+            }
+            searchString = searchString.NormalizeString();
+            Task tasksearch = new Task(() => books = books.Where(s => (s.Title!.Contains(searchString)) || (s.Author!.Contains(searchString)) || (s.Genre!.Contains(searchString))));
             if (!String.IsNullOrEmpty(searchString))
             {
                 tasksearch.Start();
