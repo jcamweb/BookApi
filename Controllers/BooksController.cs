@@ -122,7 +122,7 @@ namespace BookApi.Controllers
         /// <returns>books</returns>
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchPharma([FromQuery(Name = "searchString")] string searchstring)
+        public async Task<IActionResult> SearchBook([FromQuery(Name = "searchString")] string searchstring)
         {
             var books = await _repository.SearchBookAsync(searchstring);
             if (books == null)
