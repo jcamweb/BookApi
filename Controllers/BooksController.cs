@@ -55,7 +55,7 @@ namespace BookApi.Controllers
         /// <param name="Author"></param>
         /// <param name="Genre"></param>
         /// <param name="PublishedYear"></param>
-                
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBook(int id, Book book)
         {
@@ -102,7 +102,7 @@ namespace BookApi.Controllers
             }
             catch (DbUpdateException ex)
             {
-                 ModelState.AddModelError("", "Unable to save changes. ");
+                ModelState.AddModelError("", "Unable to save changes. ");
                 _logger.LogError($"{nameof(PostBook)} No se ha podido crear book: {ex.Message}");
             }
             return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
@@ -113,10 +113,10 @@ namespace BookApi.Controllers
         /// Elimina book por id
         /// </summary>
         /// <param name="id"></param>
-       [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-             var book = await _repository.GetByIdAsync(id);
+            var book = await _repository.GetByIdAsync(id);
             if (book == null)
             {
                 return NotFound();
@@ -132,8 +132,8 @@ namespace BookApi.Controllers
         /// <param name="searchString"></param>
         /// <returns>books</returns>
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchBook([FromQuery(Name = "searchString")] string searchstring)
+        [HttpGet("search/{searchstring}")]
+        public async Task<IActionResult> SearchBook(string searchstring)
         {
             var books = await _repository.SearchBookAsync(searchstring);
             if (books == null)
