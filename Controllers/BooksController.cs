@@ -93,7 +93,18 @@ namespace BookApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
-            await _repository.AddAsync(book);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _repository.AddAsync(book);
+                }
+            }
+            catch (DbUpdateException ex)
+            {
+                 ModelState.AddModelError("", "Unable to save changes. ");
+                _logger.LogError($"{nameof(PostBook)} No se ha podido crear book: {ex.Message}");
+            }
             return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
         }
 
