@@ -80,7 +80,7 @@ namespace BookApi.Controllers
                 }
             }
 
-            return Ok();
+            return Ok(book);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace BookApi.Controllers
             }
 
             await _repository.DeleteAsync(id);
-            return Ok();
+            return Ok(book);
         }
 
         /// <summary>
