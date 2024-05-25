@@ -2,6 +2,7 @@
 using BookApi.Extensions;
 using BookApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Runtime.CompilerServices;
 
 namespace BookApi.Repository
@@ -98,16 +99,25 @@ namespace BookApi.Repository
             }
             );
             searchString = searchString.NormalizeString();
+            tasknormalize.Start();
+            tasknormalize.Wait();
+           // Task tasksearch = new Task(() => books = books.Where(s => (s.Title==(searchString)))); case search only one field
             Task tasksearch = new Task(() => books = books.Where(s => (s.Title!.Contains(searchString)) || (s.Author!.Contains(searchString)) || (s.Genre!.Contains(searchString))));
             if (!String.IsNullOrEmpty(searchString))
             {
-                tasknormalize.Start();
+               
                 tasksearch.Start();
                              
             }
-             tasknormalize.Wait();
+             
              tasksearch.Wait();
-             return await books.ToListAsync();                
+               // case use direct SQL
+            //var blogs = _context.Books
+            //         .FromSql($"SELECT * FROM [Books] WHERE Title = {searchString}")
+            //         .ToListAsync();
+            //  return await blogs;
+            return await books.ToListAsync();
+          
 
         }
     }
