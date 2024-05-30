@@ -2,8 +2,6 @@
 using BookApi.Extensions;
 using BookApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Runtime.CompilerServices;
 
 namespace BookApi.Repository
 {
@@ -100,8 +98,8 @@ namespace BookApi.Repository
             );
             searchString = searchString.NormalizeString();
             tasknormalize.Start();
-            tasknormalize.Wait();
-           // Task tasksearch = new Task(() => books = books.Where(s => (s.Title==(searchString)))); case search only one field
+            tasknormalize.Wait();    
+           // Task tasksearch = new Task(() => books = books.Where(s => (EF.Functions.Like(s.Title, searchString)))); //case search only one field s.Title==(searchString) / EF.Functions.Like(s.Title, searchString)
             Task tasksearch = new Task(() => books = books.Where(s => (s.Title!.Contains(searchString)) || (s.Author!.Contains(searchString)) || (s.Genre!.Contains(searchString))));
             if (!String.IsNullOrEmpty(searchString))
             {
